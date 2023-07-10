@@ -1,2 +1,2 @@
 # fireale-webblog
-self-blog
+Just a self-blog.
