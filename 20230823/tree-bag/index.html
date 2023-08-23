@@ -26,7 +26,7 @@
 <meta property="og:description" content="对于背包问题，被压掉的一维真是值得深思……">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-23T03:33:07.000Z">
-<meta property="article:modified_time" content="2023-08-23T05:56:36.591Z">
+<meta property="article:modified_time" content="2023-08-23T08:13:01.002Z">
 <meta property="article:author" content="Fireale焰实">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="图论">
@@ -311,7 +311,7 @@ v)\)</span>。输入保证所有点之间是联通的。</p>
 <p>对于 <span class="math inline">\(100\%\)</span> 的数据，<span
 class="math inline">\(0 \leq n,k \leq 2000\)</span>。</p>
 <hr />
-<h2 id="前言">前言</h2>
+<h2 id="前言">1. 前言</h2>
 <blockquote>
 <p>本文参考了 <a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/76693">子谦。
 的题解</a>和 <a
@@ -321,7 +321,7 @@ target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259"
 <p><em>对于背包问题，被压掉的一维真是值得深思……</em></p>
 <p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259">小心漂亮女人
 的题解</a>中的<code>不合法情况去除问题</code>原题解的说明加上例子已经讲得很清楚了，这里主要是想讲讲<code>转移顺序问题</code> <del>（两篇题解都着重强调我还是看了半天才看懂）</del> 这个难点。</p>
-<h2 id="分析">分析</h2>
+<h2 id="分析">2. 分析</h2>
 <p>我们看到这里的双层循环（摘自 <a
 target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/76693">子谦。
 的题解</a>）：</p>
@@ -377,7 +377,7 @@ class="math inline">\(k=0\)</span> 的情况 <del>（懒癌晚期爱了）</de
 target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259">小心漂亮女人
 的题解</a>：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">register</span> <span class="hljs-type">int</span> j = <span class="hljs-built_in">min</span>(m, siz[x]); j &gt;= <span class="hljs-number">0</span>; j--) <span class="hljs-comment">// 最大取值为最多取的黑点的数量的子树大小的更小值， 再大的状态意义不合法 </span><br>&#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">register</span> <span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt;= <span class="hljs-built_in">min</span>(j, siz[y]); k++) <span class="hljs-comment">// 同上，由于是要更新的状态的黑点数量为 j，所以在这个枚举中的上限要和 j 取更小值 </span><br>    &#123;<br>        <span class="hljs-keyword">if</span>(f[x][j - k] == <span class="hljs-number">-1</span>) <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 特判掉不合法的情况 </span><br>        <span class="hljs-type">long</span> <span class="hljs-type">long</span> val = <span class="hljs-number">1ll</span> * e[i].w * k * (m - k) + <span class="hljs-number">1ll</span> * e[i].w * (siz[y] - k) * (n - m - siz[y] + k); <span class="hljs-comment">// 这是新产生的贡献，由于很长的缘故，单独写出来 </span><br>        f[x][j] = <span class="hljs-built_in">max</span>(f[x][j], f[x][j - k] + f[y][k] + val); <span class="hljs-comment">// 看是否能够更新答案 </span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h2 id="结语">结语</h2>
+<h2 id="结语">3. 结语</h2>
 <p>其实无论是树形背包还是其他的背包，都需要注意被滚动掉的一维到底发生了什么，关注状态之间的依附关系，这一维关系到整个算法的正确与否。</p>
 
                 
