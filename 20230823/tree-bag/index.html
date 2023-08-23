@@ -1,0 +1,815 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.ico">
+  <link rel="icon" href="/img/icon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#F28C56">
+  <meta name="author" content="Fireale焰实">
+  <meta name="keywords" content="Blog">
+  
+    <meta name="description" content="对于背包问题，被压掉的一维真是值得深思……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对树形背包的思考">
+<meta property="og:url" content="http://fireale.xyz/20230823/tree-bag/index.html">
+<meta property="og:site_name" content="Fireale&#39;s Blog">
+<meta property="og:description" content="对于背包问题，被压掉的一维真是值得深思……">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-23T03:33:07.000Z">
+<meta property="article:modified_time" content="2023-08-23T05:56:36.591Z">
+<meta property="article:author" content="Fireale焰实">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="图论">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="树论">
+<meta property="article:tag" content="动态规划">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>对树形背包的思考 - Fireale&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"fireale.xyz","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":10,"cursorChar":" ","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 40vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fireale&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background_short.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="对树形背包的思考"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-23 11:33" pubdate>
+          2023年8月23日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">对树形背包的思考</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="树形背包">树形背包</h1>
+<p>写写自己对书上背包的一些理解，聊的是<a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3177">洛谷 P3177 [HAOI2015]
+树上染色</a>，同步发在<a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/discuss/661772">洛谷此题讨论区</a>。</p>
+<p>这里贴一下原题吧：</p>
+<hr />
+<h3 id="haoi2015-树上染色">[HAOI2015] 树上染色</h3>
+<h4 id="题目描述">题目描述</h4>
+<p>有一棵点数为 <span class="math inline">\(n\)</span>
+的树，树边有边权。给你一个在 <span class="math inline">\(0 \sim
+n\)</span> 之内的正整数 <span class="math inline">\(k\)</span>
+，你要在这棵树中选择 <span class="math inline">\(k\)</span>
+个点，将其染成黑色，并将其他的 <span class="math inline">\(n-k\)</span>
+个点染成白色。将所有点染色后，你会获得黑点两两之间的距离加上白点两两之间的距离的和的收益。问收益最大值是多少。</p>
+<h4 id="输入格式">输入格式</h4>
+<p>第一行包含两个整数 <span class="math inline">\(n,k\)</span>。</p>
+<p>第二到 <span class="math inline">\(n\)</span> 行每行三个正整数 <span
+class="math inline">\(u, v, w\)</span>，表示该树中存在一条长度为 <span
+class="math inline">\(w\)</span> 的边 <span class="math inline">\((u,
+v)\)</span>。输入保证所有点之间是联通的。</p>
+<h4 id="输出格式">输出格式</h4>
+<p>输出一个正整数，表示收益的最大值。</p>
+<h4 id="样例-1">样例 #1</h4>
+<h5 id="样例输入-1">样例输入 #1</h5>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">3 1<br>1 2 1<br>1 3 2<br></code></pre></td></tr></table></figure>
+<h5 id="样例输出-1">样例输出 #1</h5>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">3<br></code></pre></td></tr></table></figure>
+<h4 id="提示">提示</h4>
+<p>对于 <span class="math inline">\(100\%\)</span> 的数据，<span
+class="math inline">\(0 \leq n,k \leq 2000\)</span>。</p>
+<hr />
+<h2 id="前言">前言</h2>
+<blockquote>
+<p>本文参考了 <a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/76693">子谦。
+的题解</a>和 <a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259">小心漂亮女人
+的题解</a>的思路，拜谢两位大佬orz。蒟蒻看了很久才看懂题解的底层逻辑，这篇堆了很多废话和简单逻辑（可能比较易懂？)，不过还是建议仔细读完这两篇题解再看这篇。</p>
+</blockquote>
+<p><em>对于背包问题，被压掉的一维真是值得深思……</em></p>
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259">小心漂亮女人
+的题解</a>中的<code>不合法情况去除问题</code>原题解的说明加上例子已经讲得很清楚了，这里主要是想讲讲<code>转移顺序问题</code> <del>（两篇题解都着重强调我还是看了半天才看懂）</del> 这个难点。</p>
+<h2 id="分析">分析</h2>
+<p>我们看到这里的双层循环（摘自 <a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/76693">子谦。
+的题解</a>）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-built_in">min</span>(m,sz[u]);j&gt;=<span class="hljs-number">0</span>;--j)&#123;   <span class="hljs-comment">//此处倒序枚举是为了避免重复选取</span><br>    <span class="hljs-keyword">if</span>(f[u][j]!=<span class="hljs-number">-1</span>)    <span class="hljs-comment">//在DP前应先加上当前子节点的子树纯白色的情况，这是下面也倒序枚举的前提</span><br>        f[u][j]+=f[v][<span class="hljs-number">0</span>]+(ll)sz[v]*(n-m-sz[v])*e[i].w;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> k=<span class="hljs-built_in">min</span>(j,sz[v]);k;--k)&#123;<br>        <span class="hljs-keyword">if</span>(f[u][j-k]==<span class="hljs-number">-1</span>)<span class="hljs-keyword">continue</span>;<br>        ll val=(ll)(k*(m-k)+(sz[v]-k)*(n-m-sz[v]+k))*e[i].w;   <span class="hljs-comment">//当前情况下连接子节点的边的贡献</span><br>        f[u][j]=<span class="hljs-built_in">max</span>(f[u][j],f[u][j-k]+f[v][k]+val);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>先解释一下变量的含义：<span
+class="math inline">\(u\)</span> 表示当前dfs处理的子树的根节点，<span
+class="math inline">\(v\)</span> 表示 <span
+class="math inline">\(u\)</span> 可到达的节点（除 <span
+class="math inline">\(u\)</span> 的父节点）（<span
+class="math inline">\(v\)</span> 也是 <span
+class="math inline">\(u\)</span> 节点下的各子树的根节点），<span
+class="math inline">\(m\)</span> 表示题目要求选的黑点数，<span
+class="math inline">\(sz[i]\)</span> 表示以节点 <span
+class="math inline">\(i\)</span> 为根的子树大小，<span
+class="math inline">\(k\)</span> 表示 <span
+class="math inline">\(u\)</span> 节点的子树上将要选择的黑点数。</p>
+<p>实际上，前序后序遍历都不是重点（乱序都是可以的），但是 <span
+class="math inline">\(k=0\)</span> 的情况却是十分特殊，这种情况和其他情况有本质上的差别。</p>
+<p>首先，当我们更新 <span
+class="math inline">\(f[u][j]\)</span> 时，我们自然想要使用前一个状态（即只合并过上一个和以前的子树的状态）来推出当前要合并的子树的状态。还记得
+01
+背包怎么压数组第一维吗？（从效果来看这里称作时间维度吧）当我们写出对容量
+<span class="math inline">\(j\)</span>
+倒序遍历的时候，我们就已经用滚动数组的思想压掉了时间维度，因为当我们更新 <span
+class="math inline">\(f[u][j]\)</span> 时，是用 <span
+class="math inline">\(f[u][j-k]\)</span> 更新的，01 背包中的 <span
+class="math inline">\(k&gt;0\)</span>，则 <span
+class="math inline">\(j-k&lt;j\)</span>，<span
+class="math inline">\(j\)</span> 倒序遍历的时候 <span
+class="math inline">\(f[u][j-k]\)</span> 就会在 <span
+class="math inline">\(f[u][j]\)</span> 之后被更新，也就是说我们就是在用过去的状态更新现在的状态，自然就能滚动掉时间维度。</p>
+<p>那么回到这里的树状背包，我们可以发现 <strong><span
+class="math inline">\(k\)</span> 的范围是 <span
+class="math inline">\([0,\min(j,sz[v])]\)</span>，是能取到 <span
+class="math inline">\(0\)</span> 的，那么我们在更新 <span
+class="math inline">\(f[u][j]\)</span> 时就会用到过去的状态 <span
+class="math inline">\(f[u][j-0]\)</span>（跟现在 <span
+class="math inline">\(f[u][j]\)</span> 一模一样！）更新现在<del>（我更新我自己）</del></strong>，为了让我们在更新现在的 <span
+class="math inline">\(f[u][j]\)</span> 时用过去的 <span
+class="math inline">\(f[u][j-0]\)</span>，只需要在一开始的时候就先把 <span
+class="math inline">\(f[u][j]\)</span> 自我更新，其实质上是在用过去的 <span
+class="math inline">\(f[u][j-0]\)</span> 更新现在的 <span
+class="math inline">\(f[u][j]\)</span>，更新一结束 <span
+class="math inline">\(f[u][j]\)</span> 就变成新的现在的状态了。</p>
+<p><em>这种每次状态转移只需一次自我更新的尚且还可以把时间维度滚动掉，但如果每次状态转移需要更多这样的更新恐怕就不能滚动了……（可能是蒟蒻太菜，暂时想不到有什么办法）</em></p>
+<p>不过如果之前没有更新过子树（<code>f[u][j]==-1</code>）就不需要先自我更新了~</p>
+<p>至于剩余的状态嘛，就像 01
+背包一样是还没被更新的数据（即目前还是过去的数据），完全可以任意序地更新 <span
+class="math inline">\(f[u][j]\)</span>。</p>
+<p>那么正向从 <span
+class="math inline">\(0\)</span> 开始遍历就是很自然地先作了它的自我更新，不需要特判 <span
+class="math inline">\(k=0\)</span> 的情况 <del>（懒癌晚期爱了）</del>，下面使用正向遍历的双层循环摘自 <a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259">小心漂亮女人
+的题解</a>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">register</span> <span class="hljs-type">int</span> j = <span class="hljs-built_in">min</span>(m, siz[x]); j &gt;= <span class="hljs-number">0</span>; j--) <span class="hljs-comment">// 最大取值为最多取的黑点的数量的子树大小的更小值， 再大的状态意义不合法 </span><br>&#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">register</span> <span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt;= <span class="hljs-built_in">min</span>(j, siz[y]); k++) <span class="hljs-comment">// 同上，由于是要更新的状态的黑点数量为 j，所以在这个枚举中的上限要和 j 取更小值 </span><br>    &#123;<br>        <span class="hljs-keyword">if</span>(f[x][j - k] == <span class="hljs-number">-1</span>) <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 特判掉不合法的情况 </span><br>        <span class="hljs-type">long</span> <span class="hljs-type">long</span> val = <span class="hljs-number">1ll</span> * e[i].w * k * (m - k) + <span class="hljs-number">1ll</span> * e[i].w * (siz[y] - k) * (n - m - siz[y] + k); <span class="hljs-comment">// 这是新产生的贡献，由于很长的缘故，单独写出来 </span><br>        f[x][j] = <span class="hljs-built_in">max</span>(f[x][j], f[x][j - k] + f[y][k] + val); <span class="hljs-comment">// 看是否能够更新答案 </span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="结语">结语</h2>
+<p>其实无论是树形背包还是其他的背包，都需要注意被滚动掉的一维到底发生了什么，关注状态之间的依附关系，这一维关系到整个算法的正确与否。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/C/" class="category-chain-item">C++</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/C/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95/" class="print-no-link">#算法</a>
+      
+        <a href="/tags/%E5%9B%BE%E8%AE%BA/" class="print-no-link">#图论</a>
+      
+        <a href="/tags/C/" class="print-no-link">#C++</a>
+      
+        <a href="/tags/%E6%A0%91%E8%AE%BA/" class="print-no-link">#树论</a>
+      
+        <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="print-no-link">#动态规划</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>对树形背包的思考</div>
+      <div>http://fireale.xyz/20230823/tree-bag/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Fireale焰实</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/20230712/bfs-eight/" title="一次脑瘫事件 - 广搜八数码问题">
+                        <span class="hidden-mobile">一次脑瘫事件 - 广搜八数码问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
