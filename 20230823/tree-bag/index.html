@@ -20,24 +20,24 @@
   
     <meta name="description" content="对于背包问题，被压掉的一维真是值得深思……">
 <meta property="og:type" content="article">
-<meta property="og:title" content="对树形背包的思考">
+<meta property="og:title" content="洛谷 P3177 [HAOI2015] 树上染色 - 对树形背包的思考">
 <meta property="og:url" content="http://fireale.xyz/20230823/tree-bag/index.html">
 <meta property="og:site_name" content="Fireale&#39;s Blog">
 <meta property="og:description" content="对于背包问题，被压掉的一维真是值得深思……">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-23T03:33:07.000Z">
-<meta property="article:modified_time" content="2023-08-27T03:24:40.492Z">
+<meta property="article:modified_time" content="2023-10-04T15:07:07.462Z">
 <meta property="article:author" content="Fireale焰实">
 <meta property="article:tag" content="算法">
-<meta property="article:tag" content="图论">
 <meta property="article:tag" content="C++">
+<meta property="article:tag" content="图论">
 <meta property="article:tag" content="树论">
 <meta property="article:tag" content="动态规划">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>对树形背包的思考 - Fireale&#39;s Blog</title>
+  <title>洛谷 P3177 [HAOI2015] 树上染色 - 对树形背包的思考 - Fireale&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -191,7 +191,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="对树形背包的思考"></span>
+            <span id="subtitle" data-typed-text="洛谷 P3177 [HAOI2015] 树上染色 - 对树形背包的思考"></span>
           
         </div>
 
@@ -262,17 +262,19 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">对树形背包的思考</h1>
+            <h1 id="seo-header">洛谷 P3177 [HAOI2015] 树上染色 - 对树形背包的思考</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="树形背包">树形背包</h1>
+                <h1 id="洛谷-p3177-haoi2015-树上染色---对树形背包的思考"><a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3177">洛谷 P3177 [HAOI2015]
+树上染色</a> - 对树形背包的思考</h1>
 <p>写写自己对书上背包的一些理解，聊的是<a
 target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3177">洛谷 P3177 [HAOI2015]
 树上染色</a>，同步发在<a
 target="_blank" rel="noopener" href="https://www.luogu.com.cn/discuss/661772">洛谷此题讨论区</a>。</p>
-<p>这里贴一下原题吧：</p>
+<p>这里先贴一下原题吧：</p>
 <hr />
 <h3 id="haoi2015-树上染色">[HAOI2015] 树上染色</h3>
 <h4 id="题目描述">题目描述</h4>
@@ -337,28 +339,29 @@ class="math inline">\(f[u][j]\)</span> 时，我们自然想要使用前一个�
 class="math inline">\(f[u][j]\)</span> 时，是用 <span
 class="math inline">\(f[u][j-k]\)</span> 更新的，01 背包中的 <span
 class="math inline">\(k&gt;0\)</span>，则 <span
-class="math inline">\(j-k&lt;j\)</span>，<span
+class="math inline">\(j-k&lt;j\)</span> ，<span
 class="math inline">\(j\)</span> 倒序遍历的时候 <span
 class="math inline">\(f[u][j-k]\)</span> 就会在 <span
 class="math inline">\(f[u][j]\)</span> 之后被更新，也就是说我们就是在用过去的状态更新现在的状态，自然就能滚动掉时间维度。</p>
 <p>那么回到这里的树状背包，我们可以发现 <strong><span
 class="math inline">\(k\)</span> 的范围是 <span
-class="math inline">\([0,\min(j,sz[v])]\)</span>，是能取到 <span
+class="math inline">\([0,\min(j,sz[v])]\)</span> ，是能取到 <span
 class="math inline">\(0\)</span> 的，那么我们在更新 <span
 class="math inline">\(f[u][j]\)</span> 时就会用到过去的状态 <span
 class="math inline">\(f[u][j-0]\)</span>（跟现在 <span
 class="math inline">\(f[u][j]\)</span> 一模一样！）更新现在<del>（我更新我自己）</del></strong>，为了让我们在更新现在的 <span
 class="math inline">\(f[u][j]\)</span> 时用过去的 <span
-class="math inline">\(f[u][j-0]\)</span>，只需要在一开始的时候就先把 <span
+class="math inline">\(f[u][j-0]\)</span>
+，只需要在一开始的时候就先把 <span
 class="math inline">\(f[u][j]\)</span> 自我更新，其实质上是在用过去的 <span
 class="math inline">\(f[u][j-0]\)</span> 更新现在的 <span
-class="math inline">\(f[u][j]\)</span>，更新一结束 <span
+class="math inline">\(f[u][j]\)</span> ，更新一结束 <span
 class="math inline">\(f[u][j]\)</span> 就变成新的现在的状态了。</p>
 <p><em>这种每次状态转移只需一次自我更新的尚且还可以把时间维度滚动掉，但如果每次状态转移需要更多这样的更新恐怕就不能滚动了……（可能是蒟蒻太菜，暂时想不到有什么办法）</em></p>
 <p>不过如果之前没有更新过子树（<code>f[u][j]==-1</code>）就不需要先自我更新了~</p>
 <p>至于剩余的状态嘛，就像 01
 背包一样是还没被更新的数据（即目前还是过去的数据），完全可以任意序地更新 <span
-class="math inline">\(f[u][j]\)</span>。</p>
+class="math inline">\(f[u][j]\)</span> 。</p>
 <p>那么正向从 <span
 class="math inline">\(0\)</span> 开始遍历就是很自然地先作了它的自我更新，不需要特判 <span
 class="math inline">\(k=0\)</span> 的情况 <del>（懒癌晚期爱了）</del>，下面使用正向遍历的双层循环摘自 <a
@@ -385,15 +388,8 @@ target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259"
     
       <span class="category-chain">
         
-  <a href="/categories/C/" class="category-chain-item">C++</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/C/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
-  
-  
-
   
 
       </span>
@@ -409,9 +405,9 @@ target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259"
       
         <a href="/tags/%E7%AE%97%E6%B3%95/" class="print-no-link">#算法</a>
       
-        <a href="/tags/%E5%9B%BE%E8%AE%BA/" class="print-no-link">#图论</a>
-      
         <a href="/tags/C/" class="print-no-link">#C++</a>
+      
+        <a href="/tags/%E5%9B%BE%E8%AE%BA/" class="print-no-link">#图论</a>
       
         <a href="/tags/%E6%A0%91%E8%AE%BA/" class="print-no-link">#树论</a>
       
@@ -427,7 +423,7 @@ target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259"
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>对树形背包的思考</div>
+      <div>洛谷 P3177 [HAOI2015] 树上染色 - 对树形背包的思考</div>
       <div>http://fireale.xyz/20230823/tree-bag/</div>
     </div>
     <div class="license-meta">
@@ -482,8 +478,8 @@ target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/_post/170259"
                   <article class="post-next col-6">
                     
                     
-                      <a href="/20230712/bfs-eight/" title="一次脑瘫事件 - 广搜八数码问题">
-                        <span class="hidden-mobile">一次脑瘫事件 - 广搜八数码问题</span>
+                      <a href="/20230712/bfs-eight/" title="洛谷 P1379 八数码难题 - 一次脑瘫事件">
+                        <span class="hidden-mobile">洛谷 P1379 八数码难题 - 一次脑瘫事件</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
